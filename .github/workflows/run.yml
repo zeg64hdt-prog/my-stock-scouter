@@ -1,0 +1,22 @@
+name: StockCheck
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 22 * * 0-4' # 平日（月〜金）の日本時間朝7時に実行
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install libs
+        run: pip install requests pandas yfinance
+      - name: Run
+        env:
+          LINE_ACCESS_TOKEN: ${{ secrets.LINE_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+        run: python main.py
